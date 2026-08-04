@@ -18,6 +18,8 @@ namespace Ecom.Api
 
 
             builder.Services.infrastructureConfiguration(builder.Configuration);
+            // Autooooo Mappingggggggg
+            builder.Services.AddAutoMapper(cfg=>cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies()));
 
             var app = builder.Build();
 
