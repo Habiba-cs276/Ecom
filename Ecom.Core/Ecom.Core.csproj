@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+	
 
 </Project>

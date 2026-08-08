@@ -34,6 +34,7 @@ namespace Ecom.Api
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();   
 
             app.MapControllers();
 

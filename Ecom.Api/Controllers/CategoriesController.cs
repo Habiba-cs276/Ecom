@@ -64,7 +64,8 @@ namespace Ecom.Api.Controllers
                 Category category =_mapper.Map<Category>(categorydto);  
 
                 await _unitOfWork.GetRepositry<Category, int>().AddAsync(category);
-                return Ok(new ResponseAPI<CategoryDTO>(200,categorydto);
+                await _unitOfWork.CompleteAsync();    
+                return Ok(new ResponseAPI<CategoryDTO>(200,categorydto));
             }
             catch (Exception ex)
             {
@@ -78,6 +79,7 @@ namespace Ecom.Api.Controllers
             try
             {
                 await _unitOfWork.GetRepositry<Category, int>().DeleteAsync(id);
+                await _unitOfWork.CompleteAsync();
                 return Ok(new ResponseAPI<string>(200, "Item has been Deleted succfully"));
             }
             catch (Exception ex) 
@@ -93,6 +95,7 @@ namespace Ecom.Api.Controllers
                 Category category =_mapper.Map<Category>(categorydto);  
 
                  _unitOfWork.GetRepositry<Category, int>().UpdateAsync(category);
+                 await _unitOfWork.CompleteAsync();
                 return Ok(new ResponseAPI<string>(200, "Item has been Updated succfully"));
             }
             catch (Exception ex)

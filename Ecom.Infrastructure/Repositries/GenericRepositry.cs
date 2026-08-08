@@ -1,4 +1,4 @@
-﻿using Ecom.Core.Entites;
+﻿ using Ecom.Core.Entites;
 using Ecom.Core.Interfaces;
 using Ecom.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

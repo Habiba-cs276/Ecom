@@ -1,25 +1,21 @@
-﻿using System;
+﻿using Ecom.Core.Entites.Product;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace Ecom.Core.Entites.Product
+namespace Ecom.Core.DTOs
 {
-    public class Product : BaseEntity<int>
+    public  record CreateProductDTO
     {
-        public int Id { get; set; } 
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal NewPrice { get; set; }
         public decimal OldPrice { get; set; }
 
-        public virtual List<Photo> Photos { get; set; } 
+        public  IFormFileCollection Photos { get; set; }
         public int CategoryId { get; set; }
-        [ForeignKey(nameof(CategoryId))]
-        public virtual Category Category { get; set; }
-
-
     }
 }

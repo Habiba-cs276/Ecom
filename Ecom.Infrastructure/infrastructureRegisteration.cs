@@ -1,6 +1,7 @@
 ﻿using Ecom.Core.Interfaces;
 using Ecom.Infrastructure.Data;
 using Ecom.Infrastructure.Repositries;
+using Ecom.Infrastructure.Repositries.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ namespace Ecom.Infrastructure
             {
                 options.UseSqlServer(configuration.GetConnectionString("Ecom"));
             });
+            services.AddScoped<IImageManagementService, ImageManagementService>();
             return services;
         }
     }
