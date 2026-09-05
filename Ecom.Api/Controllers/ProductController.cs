@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Ecom.Api.Helper;
+using Ecom.Core;
 using Ecom.Core.DTOs;
 using Ecom.Core.Entites.Product;
 using Ecom.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ecom.Api.Controllers
 {
@@ -180,6 +182,33 @@ namespace Ecom.Api.Controllers
             }
 
         }
+
+        // Using Extention Methods to Filter , Sort , group by category id
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] ProductSpecParams specParams)
+        {
+            var query = _unitOfWork.GetRepositry<Product, int>()
+                .GetQueryable()
+                .Include(p => p.Category)
+                .Include(p => p.Photos)
+                .FilterByCategoryID(specParams.CategoryId)
+                .SearchByNameOrDescription(specParams.Search)
+                .SortBy(specParams.Sort);
+
+            var paginatedProducts = await query.ToPaginatedListAsync<Product>(specParams.PageIndex, specParams.PageSize);
+
+          // mapping them cause we dont rerturn all fields in Product to front 
+            var mappedItems = _mapper.Map<IReadOnlyList<ProductDTO>>(paginatedProducts.Items);
+
+            var result = new PaginatedList<ProductDTO>(
+            mappedItems,
+            paginatedProducts.TotalCount,
+            paginatedProducts.PageIndex,
+            paginatedProducts.PageSize
+            );
+            return Ok(new ResponseAPI<PaginatedList<ProductDTO>>(200, result));
+        }
+
 
     }
 }

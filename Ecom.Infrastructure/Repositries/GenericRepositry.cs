@@ -70,5 +70,10 @@ namespace Ecom.Infrastructure.Repositries
         {
             _context.Update(entity);
         }
+
+        public IQueryable<TEntity> GetQueryable()
+        {
+            return _set.AsNoTracking();
+        }
     }
 }

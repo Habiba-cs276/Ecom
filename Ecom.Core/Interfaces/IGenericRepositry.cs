@@ -18,8 +18,11 @@ namespace Ecom.Core.Interfaces
         Task<TEntity?> GetByIdAsync(TKey id, params Expression<Func<TEntity, object>>[] includes);
 
         Task DeleteAsync(TKey id);    
-        void UpdateAsync(TEntity entity);   
+        void UpdateAsync(TEntity entity);
+
+        IQueryable<TEntity> GetQueryable();
         Task SaveChangesAsync ();
+
 
     }
 }
