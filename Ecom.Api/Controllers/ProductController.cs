@@ -184,7 +184,7 @@ namespace Ecom.Api.Controllers
         }
 
         // Using Extention Methods to Filter , Sort , group by category id
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll([FromQuery] ProductSpecParams specParams)
         {
             var query = _unitOfWork.GetRepositry<Product, int>()

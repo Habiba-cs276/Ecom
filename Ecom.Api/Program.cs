@@ -41,6 +41,17 @@ namespace Ecom.Api
             // Autooooo Mappingggggggg
             builder.Services.AddAutoMapper(cfg=>cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies()));
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,7 +68,8 @@ namespace Ecom.Api
             app.UseExceptionHandler();
 
             app.UseStatusCodePages();
-           
+
+            app.UseCors("AllowFrontend");
 
             app.UseRateLimiter();
 

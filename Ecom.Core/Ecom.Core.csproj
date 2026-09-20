@@ -10,6 +10,10 @@
     <Folder Include="Services\" />
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="3.3.0" />
+  </ItemGroup>
 	
 
 </Project>
