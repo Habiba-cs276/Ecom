@@ -9,6 +9,7 @@ namespace Ecom.Core.Interfaces
 {
     public interface IUnitOfWork: IAsyncDisposable
     {
+        IAuthRepositry Auth { get; }
         IGenericRepositry<TEntity,TKey> GetRepositry<TEntity,TKey>() where TEntity: BaseEntity<TKey>;
         Task<int> CompleteAsync();  
     }

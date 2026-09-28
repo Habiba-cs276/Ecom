@@ -4,6 +4,7 @@ using Ecom.Core;
 using Ecom.Core.DTOs;
 using Ecom.Core.Entites.Product;
 using Ecom.Core.Interfaces;
+using Ecom.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

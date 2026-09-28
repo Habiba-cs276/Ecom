@@ -1,6 +1,8 @@
 ﻿using Ecom.Core.Entites;
 using Ecom.Core.Interfaces;
+using Ecom.Core.Services;
 using Ecom.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,11 +17,20 @@ namespace Ecom.Infrastructure.Repositries
 
         private readonly EcomDbContext _context;
         private readonly ConcurrentDictionary<Type, object> _repositores;
-        public UnitOfWork(EcomDbContext context)
+
+        public IAuthRepositry Auth { get; }
+        public UnitOfWork(EcomDbContext context,UserManager<ApplicationUser> userManager,
+            IEmailService emailService,SignInManager<ApplicationUser> signInManager,
+            IAuthRepositry authRepositry)
         {
             _context = context; 
-            _repositores = new ConcurrentDictionary<Type, object>();    
+            _repositores = new ConcurrentDictionary<Type, object>();
+            //_userManager = userManager;
+            //_signInManager = signInManager;
+            Auth = authRepositry;
+            //_emailService = emailService;
         }
+
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();   
@@ -38,5 +49,6 @@ namespace Ecom.Infrastructure.Repositries
                 return new GenericRepositry<TEntity, TKey>(_context);
             });
         }
+
     }
 }

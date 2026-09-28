@@ -65,6 +65,12 @@ namespace Ecom.Api
             app.UseSecurityHeaders(policies =>
             policies.AddDefaultSecurityHeaders());
 
+
+            app.UseMiddleware<GlobalExceptionHandler>();
+
+            app.UseAuthentication();
+            app.UseAuthorization(); 
+            
             app.UseExceptionHandler();
 
             app.UseStatusCodePages();

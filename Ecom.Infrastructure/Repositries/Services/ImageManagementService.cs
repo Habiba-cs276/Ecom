@@ -1,4 +1,4 @@
-﻿using Ecom.Core.Interfaces;
+﻿using Ecom.Core.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -66,5 +66,6 @@ namespace Ecom.Infrastructure.Repositries.Services
             return Task.CompletedTask;
 
         }
+
     }
 }
