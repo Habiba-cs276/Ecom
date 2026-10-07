@@ -5,6 +5,7 @@ using Ecom.Core.DTOs;
 using Ecom.Core.Entites.Product;
 using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,8 @@ namespace Ecom.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableRateLimiting("ip-limiter")]
+    [Authorize]
+
     public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
