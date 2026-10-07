@@ -34,6 +34,12 @@ namespace Ecom.Infrastructure
             //Unit Of Work
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
+            // Register IOrder Service
+            services.AddScoped<IOrderService, OrderService>();
+
+            // Register IPayment Service
+            services.AddScoped<IPaymentService,PaymentService>();
+
             //register email sender
             services.AddScoped<IEmailService, EmailService>();
             
@@ -45,6 +51,8 @@ namespace Ecom.Infrastructure
             {
                 options.UseSqlServer(configuration.GetConnectionString("Ecom"));
             });
+            //Register Image SERVICE 
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             services.AddScoped<IImageManagementService, ImageManagementService>();
 
             //add Redis Connection

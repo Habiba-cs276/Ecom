@@ -1,9 +1,11 @@
-﻿using Ecom.Core.DTOs;
+﻿using AutoMapper;
+using Ecom.Core.DTOs;
 using Ecom.Core.Entites;
 using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
 using Ecom.Core.Sharing;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +20,16 @@ namespace Ecom.Infrastructure.Repositries
         private readonly SignInManager<ApplicationUser> _signInManager; 
         private readonly IEmailService _emailService;
         private readonly IGenerateToken _generateToken;
+        private readonly IMapper _mapper; 
         public AuthRepositry(UserManager<ApplicationUser> userManager, IEmailService emailService, 
-            SignInManager<ApplicationUser> signInManager, IGenerateToken generateToken)
+            SignInManager<ApplicationUser> signInManager, IGenerateToken generateToken, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
             _generateToken = generateToken;
+            _mapper = mapper;   
+
         }
         public async Task<string> RegisterAsync(RegisterDTO registerDTO)
         {
@@ -146,5 +151,42 @@ namespace Ecom.Infrastructure.Repositries
             return result.Errors.ToList()[0].Description;
         }
 
+        public async Task<bool> UpdateAddress(string email, ShipAddressDTO address)
+        {
+            var FindUser = await _userManager.Users
+                .Include(u=>u.address)
+                .FirstOrDefaultAsync(u=>u.Email==email);
+
+            if(FindUser is null)
+            {
+                return false;
+            }
+            if(FindUser.address == null)
+            {
+                FindUser.address = _mapper.Map<Address>(address); 
+            }
+            else
+            {
+                _mapper.Map(address,FindUser.address);
+            }
+            var result = await _userManager.UpdateAsync(FindUser);
+
+            return result.Succeeded;
+
+        }
+
+        public async Task<ShipAddressDTO> GetAddress(string email)
+        {
+            var FindUser = await _userManager.Users
+             .Include(u => u.address)
+             .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (FindUser is null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<ShipAddressDTO>(FindUser.address);
+        }
     }
 }

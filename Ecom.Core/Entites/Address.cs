@@ -19,6 +19,6 @@ namespace Ecom.Core.Entites
 
         [ForeignKey(nameof(ApplicationUserId))]
         public virtual ApplicationUser ApplicationUser { get; set; }
-
+         
     }
 }

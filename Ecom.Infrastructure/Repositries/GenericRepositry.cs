@@ -34,16 +34,24 @@ namespace Ecom.Infrastructure.Repositries
         }
 
         public async Task<IReadOnlyList<TEntity>> GetAllAsync()
-            => await _set.AsNoTracking().ToListAsync(); 
-        public async Task<IReadOnlyList<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes)
+            => await _set.AsNoTracking().ToListAsync();
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync( 
+              Expression<Func<TEntity, bool>>? predicate = null,
+              params Expression<Func<TEntity, object>>[] includes)
         {
-            IQueryable<TEntity>? query =_set.AsQueryable();
-            foreach(var include in includes)
-            {
-                query=query.Include(include);
-            }
-            return await query.ToListAsync();   
+            IQueryable<TEntity> query = _set.AsNoTracking();
 
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<TEntity?> GetByIdAsync(TKey id)
@@ -60,7 +68,18 @@ namespace Ecom.Infrastructure.Repositries
             }
             return query.FirstOrDefaultAsync(i => i.Id!.Equals(id));
           }
+        public async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,
+                                                           params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = _set.AsQueryable();
 
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
+        }
         public async Task SaveChangesAsync()
         {
           await _context.SaveChangesAsync();

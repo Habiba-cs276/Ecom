@@ -5,7 +5,6 @@ using Ecom.Core.DTOs;
 using Ecom.Core.Entites.Product;
 using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +31,7 @@ namespace Ecom.Api.Controllers
             try
             {
                 var model = await _unitOfWork.GetRepositry<Product, int>()
-                     .GetAllAsync(x => x.Category, x => x.Photos);
+                     .GetAllAsync(null, x => x.Category, x => x.Photos);
                 if (model == null)
                 {
                     return BadRequest(new ResponseAPI<string>(400));
@@ -105,7 +104,7 @@ namespace Ecom.Api.Controllers
             {
                 if (!ModelState.IsValid) return BadRequest(new ResponseAPI<string>(400));
 
-                var product = await _unitOfWork.GetRepositry<Product, int>().GetByIdAsync(id,p=>p.Photos);
+                var product = await _unitOfWork.GetRepositry<Product, int>().GetByIdAsync(id, p => p.Photos);
 
                 if (product == null) return BadRequest(new ResponseAPI<string>(400));
 
@@ -160,7 +159,7 @@ namespace Ecom.Api.Controllers
             try
             {
                 var repo = _unitOfWork.GetRepositry<Product, int>();
-                var product = await repo.GetByIdAsync(id,p=>p.Photos,x=>x.Category);
+                var product = await repo.GetByIdAsync(id, p => p.Photos, x => x.Category);
 
                 if (product == null)
                     return NotFound(new ResponseAPI<string>(400));
@@ -198,7 +197,7 @@ namespace Ecom.Api.Controllers
 
             var paginatedProducts = await query.ToPaginatedListAsync<Product>(specParams.PageIndex, specParams.PageSize);
 
-          // mapping them cause we dont rerturn all fields in Product to front 
+            // mapping them cause we dont rerturn all fields in Product to front 
             var mappedItems = _mapper.Map<IReadOnlyList<ProductDTO>>(paginatedProducts.Items);
 
             var result = new PaginatedList<ProductDTO>(

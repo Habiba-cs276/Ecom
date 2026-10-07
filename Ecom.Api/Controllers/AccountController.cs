@@ -2,8 +2,10 @@
 using Ecom.Api.Helper;
 using Ecom.Core.DTOs;
 using Ecom.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Ecom.Api.Controllers
@@ -25,11 +27,9 @@ namespace Ecom.Api.Controllers
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
             string result = await _unitOfWork.Auth.RegisterAsync(registerDTO);
-
-            if(result != "done")
-            {
+          
+            if (result != "User Registered Successfully")
                 return BadRequest(new ResponseAPI<string>(400, null, result));
-            }
 
             return Ok(new ResponseAPI<string>(200,null,result));
         }
@@ -84,6 +84,41 @@ namespace Ecom.Api.Controllers
                 return BadRequest(new ResponseAPI<string>(400));
             }
             return Ok(new ResponseAPI<string>(200));
+        }
+
+        [HttpPut("Update-Address")]
+        [Authorize]
+        public async Task<IActionResult> UpdateAddress(ShipAddressDTO shipAddressDTO)
+        {
+            var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if(UserEmail == null)
+            {
+                return BadRequest(new ResponseAPI<string>(400));
+            }
+            var result = await _unitOfWork.Auth.UpdateAddress(UserEmail, shipAddressDTO);
+            if(!result)
+            {
+                return BadRequest(new ResponseAPI<string>(400));
+            }
+            return Ok(new ResponseAPI<string>(200,null,"Address Updated Succefully!"));
+
+        }
+        [HttpGet("Get-User-Address")]
+        [Authorize]
+        public async Task<IActionResult> GetAddress()
+        {
+            var UserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(UserEmail))
+            {
+                return Unauthorized(new ResponseAPI<string>(401, null, "User not authorized"));
+            }
+            var result= await _unitOfWork.Auth.GetAddress(UserEmail);
+            if (result is null)
+            {
+                return NotFound(new ResponseAPI<string>(404, null, "No address found for this user"));
+            }
+            return Ok(new ResponseAPI<ShipAddressDTO>(200, result));
+
         }
     }
 }
